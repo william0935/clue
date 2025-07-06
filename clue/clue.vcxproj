@@ -128,10 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="clue.cpp" />
+    <ClCompile Include="deduction.cpp" />
     <ClCompile Include="game.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="card.h" />
+    <ClInclude Include="deduction.h" />
     <ClInclude Include="game.h" />
   </ItemGroup>
   <ItemGroup>

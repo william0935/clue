@@ -1,3 +1,12 @@
+7/3/25
+
+been working on it, just need the accusation to be ready. currently taking in accusations
+isn't working, there's some bug i have to find because for some reason it's saying there
+is someone that has something when everyone says no to if they have something
+
+also need to implement checking if the inputs are actually in the cards when doing
+the accusations
+
 7/1/25
 
 6+6+9=21 total cards, 18 cards to be split among the players
