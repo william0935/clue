@@ -24,12 +24,24 @@
     <ClCompile Include="deduction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="facts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="deduction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="facts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,16 +6,6 @@
 
 using namespace std;
 
-vector<string> allCards = {
-    // Suspects
-    "mr green", "col mustard", "mrs peacock", "prof plum", "miss scarlett", "dr orchid",
-    // Weapons
-    "candlestick", "dagger", "lead pipe", "revolver", "rope", "wrench",
-    // Rooms
-    "kitchen", "ballroom", "conservatory", "dining room", "billiard room",
-    "library", "lounge", "hall", "study"
-};
-
 void game::setUpGame(int& numberOfPlayers, vector<string>& names, vector<vector<string>>& cards)
 {
     // number of players
@@ -94,15 +84,32 @@ void game::setUpGame(int& numberOfPlayers, vector<string>& names, vector<vector<
 }
 
 void game::playGame(vector<string>& names, vector<vector<string>>& cards, 
-    vector<pair<vector<vector<string>>, bool>>& accusations)
+    vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations)
 {
     int numPlayers = names.size();
     cout << "What is the turn order?" << endl;
-    vector<string> turnOrder(numPlayers, "");
+    vector<string> turnOrder;
     for (int i = 0; i < numPlayers; ++i)
     {
-        getline(cin, turnOrder[i]);
+        while (true)
+        {
+            string testName;
+            getline(cin, testName);
+
+            // check if card is valid
+            auto it = find(names.begin(), names.end(), testName);
+            if (it != names.end())
+            {
+                turnOrder.push_back(testName);
+                break;
+            }
+            else
+            {
+                cout << "Invalid name. Try again.\n";
+            }
+        }
     }
+
     
     while (true)
     {
@@ -120,7 +127,7 @@ void game::playGame(vector<string>& names, vector<vector<string>>& cards,
         }
         else if (input == "d")
         {
-            deduce(accusations);
+            deduce(accusations, names, cards);
         }
         else if (input == "v")
         {
@@ -141,7 +148,7 @@ void game::displayKnown(vector<vector<string>>& cards)
     }
 }
 
-void game::accusation(vector<pair<vector<vector<string>>, bool>>& accusations, const vector<string>& turnOrder, 
+void game::accusation(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations, const vector<string>& turnOrder,
     string yourName, vector<vector<string>>& cards)
 {
     int numPlayers = turnOrder.size();
@@ -216,6 +223,7 @@ void game::accusation(vector<pair<vector<vector<string>>, bool>>& accusations, c
     // looping through the remaining players to see if any of them have any of the cards
     vector<string> playersInvolved;
     bool showedCard = false;
+    string newInfo = "";
     for (int i = 1; i < numPlayers; ++i)
     {
         // consider next player
@@ -228,11 +236,16 @@ void game::accusation(vector<pair<vector<vector<string>>, bool>>& accusations, c
         {
             if (yourName == accuser)
             {
-                string newInfo;
                 cout << "What card did they show?" << endl;
                 getline(cin, newInfo);
                 cards.push_back({ accused, newInfo });
             }
+            else if (yourName == accused)
+            {
+                cout << "What card did you show?" << endl;
+                getline(cin, newInfo);
+            }
+
             showedCard = true;
             playersInvolved.push_back(accused);
             break;
@@ -240,16 +253,17 @@ void game::accusation(vector<pair<vector<vector<string>>, bool>>& accusations, c
         playersInvolved.push_back(accused);
     }
 
-    accusations.push_back({ { {accuser, person, weapon, place}, playersInvolved }, showedCard });
+    accusations.push_back({ { {accuser, person, weapon, place}, playersInvolved }, { showedCard, newInfo } });
 }
 
-void game::deduce(vector<pair<vector<vector<string>>, bool>>& accusations)
+void game::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
+    vector<string> names, vector<vector<string>>& cards)
 {
-    deduction d;
-    d.deduce(accusations);
+    deduction d(names);
+    d.deduce(accusations, names, cards);
 }
 
-void game::showAccusations(vector<pair<vector<vector<string>>, bool>>& accusations)
+void game::showAccusations(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations)
 {
     int count = 1;
     for (auto accusation : accusations)
@@ -262,10 +276,17 @@ void game::showAccusations(vector<pair<vector<vector<string>>, bool>>& accusatio
         string weapon = moreInfo[2];
         string place = moreInfo[3];
         vector<string> playersInvolved = info[1];
-        bool shownCard = accusation.second;
+        bool shownCard = accusation.second.first;
+        string knownCard = accusation.second.second;
 
         // display the accusation
         cout << count << ": " << accuser << " accused " << person << ", " << weapon << ", " << place << ". ";
+        
+        if (knownCard != "")
+        {
+            cout << "The card shown was " << knownCard << ". ";
+        }
+
         if (!shownCard)
         {
             cout << "Nobody had anything." << endl;

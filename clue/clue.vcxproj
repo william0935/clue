@@ -129,11 +129,15 @@
   <ItemGroup>
     <ClCompile Include="clue.cpp" />
     <ClCompile Include="deduction.cpp" />
+    <ClCompile Include="facts.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="globals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deduction.h" />
+    <ClInclude Include="facts.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="globals.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="report.txt" />
