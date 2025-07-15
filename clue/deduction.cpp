@@ -13,6 +13,14 @@ deduction::deduction(vector<string> names)
 void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
     vector<string> names, vector<vector<string>>& cards)
 {
+    // have to add facts about cards you already know/have
+    for (auto card : cards)
+    {
+        vector<pair<string, string>> temp;
+        temp.push_back({ card[0], card[1] });
+        f.addFact(temp);
+    }
+
     // each accusation needs to add some constraints to hashmap
     for (auto accusation : accusations)
     {
@@ -50,9 +58,11 @@ void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>&
 
         // add facts about players with nothing
         int iterations = numPlayersInvolved - 1;
+        bool addEnvelope = false;
         if (!showedCard)
         {
             ++iterations;
+            addEnvelope = true;
         }
 
         for (int i = 0; i < iterations; ++i)
@@ -61,19 +71,38 @@ void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>&
             vector<pair<string, string>> tempPerson;
             vector<pair<string, string>> tempWeapon;
             vector<pair<string, string>> tempPlace;
-            for (string player : names)
+
+            // if nobody showed the card, the only people that could have it is the accuser or the envelope
+            if (addEnvelope)
             {
-                // add a fact involving the current card and all people that is not the current person
-                if (player != currPerson)
+                // person
+                tempPerson.push_back({ "envelope", person });
+                tempPerson.push_back({ accuser, person });
+
+                // weapon
+                tempWeapon.push_back({ "envelope", weapon });
+                tempWeapon.push_back({ accuser, weapon });
+
+                // place
+                tempPlace.push_back({ "envelope", place });
+                tempPlace.push_back({ accuser, place });
+            }
+            else
+            {
+                for (string player : names)
                 {
-                    // person
-                    tempPerson.push_back({ player, person });
+                    // add a fact involving the current card and all people that is not the current person
+                    if (player != currPerson)
+                    {
+                        // person
+                        tempPerson.push_back({ player, person });
 
-                    // weapon
-                    tempWeapon.push_back({ player, weapon });
+                        // weapon
+                        tempWeapon.push_back({ player, weapon });
 
-                    // place
-                    tempPlace.push_back({ player, place });
+                        // place
+                        tempPlace.push_back({ player, place });
+                    }
                 }
             }
 
@@ -84,5 +113,5 @@ void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>&
     }
 
     // look through facts and do some deductions
-    f.eliminate();
+    f.eliminate(cards, names);
 }

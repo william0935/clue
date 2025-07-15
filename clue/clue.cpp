@@ -10,6 +10,8 @@ using namespace std;
 // playersInvolved is a vector of strings, and cardShown is a boolean describing whether
 // a card was shown during the accusation
 // 
+// cards stores { playerName, knownCard }
+// 
 // the key point is that the players are shown in turn order.
 // if there are multiple players, it means that the last player is the one
 // who showed the card, and the previous players didn't have any of the cards. playersInvolved

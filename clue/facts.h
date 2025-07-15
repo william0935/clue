@@ -21,7 +21,7 @@ public:
 	// pre: none
 	// post: bulk of the logic here to eliminate stuff from facts and add stuff back
 	// to cards. this where the magic happens!
-	void eliminate();
+	void eliminate(vector<vector<string>>& cards, vector<string> names);
 
 private:
 	vector<vector<pair<string, string>>> myFacts;
