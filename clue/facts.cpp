@@ -118,8 +118,16 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
             {
                 if (find(it->begin(), it->end(), target) != it->end())
                 {
-                    it = myFacts.erase(it);
-                    changed = true;
+                    // dont want to remove the statements of length 1
+                    if (it->size() > 1)
+                    {
+                        it = myFacts.erase(it);
+                        changed = true;
+                    }
+                    else
+                    {
+                        ++it;
+                    }
                 }
                 else
                 {
@@ -130,8 +138,12 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
             // strip out any other (X,C) from all other clauses
             for (vector<pair<string, string>>& clause : myFacts)
             {
+                // Only remove pairs for the same card BUT a different person
                 int before = clause.size();
-                clause.erase(remove_if(clause.begin(), clause.end(), [&](const pair<string, string>& somePair) { return somePair.second == C; }), clause.end());
+                clause.erase(remove_if(clause.begin(), clause.end(),
+                    [&](const pair<string, string>& somePair) {
+                        return somePair.second == C && somePair.first != P;
+                    }), clause.end());
                 if (clause.size() != before)
                 {
                     changed = true;

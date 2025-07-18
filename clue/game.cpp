@@ -159,7 +159,19 @@ void game::accusation(vector<pair<vector<vector<string>>, pair<bool, string>>>& 
 
     string accuser, accused;
     cout << "Who made the accusation?" << endl;
-    getline(cin, accuser);
+    while (true)
+    {
+        getline(cin, accuser);
+        auto it = find(turnOrder.begin(), turnOrder.end(), accuser);
+        if (it != turnOrder.end())
+        {
+            break;
+        }
+        else
+        {
+            cout << "Invalid player name. Try again.\n";
+        }
+    }
 
     // find the index of the player in turnOrder
     int accuserIndex = -1;
@@ -230,7 +242,7 @@ void game::accusation(vector<pair<vector<vector<string>>, pair<bool, string>>>& 
         string accused = turnOrder[(accuserIndex + i) % numPlayers];
 
         string ans;
-        cout << "Did " << accused << " have anything?" << endl;
+        cout << "Did " << accused << " have anything? (yes/no)" << endl;
         getline(cin, ans);
         if (ans == "Yes" || ans == "yes" || ans == "y" || ans == "Y")
         {
