@@ -41,5 +41,9 @@ public:
 	// pre: none
 	// post: displays all current accusations
 	void showAccusations(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations);
+
+	// pre: none
+	// post: adds known card to knownCards
+	void addKnownCard(vector<string> names, vector<vector<string>>& cards);
 };
 

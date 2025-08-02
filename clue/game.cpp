@@ -110,11 +110,10 @@ void game::playGame(vector<string>& names, vector<vector<string>>& cards,
         }
     }
 
-    
     while (true)
     {
         string input = "";
-        cout << "Look at known cards(k), enter accusations(a), deduce something(d), view accusations(v), or game ended(anything else)" << endl;
+        cout << "Look at known cards(k), enter accusations(a), deduce something(d), view accusations(v), add known card(c), or game ended(anything else)" << endl;
         getline(cin, input);
 
         if (input == "k")
@@ -132,6 +131,10 @@ void game::playGame(vector<string>& names, vector<vector<string>>& cards,
         else if (input == "v")
         {
             showAccusations(accusations);
+        }
+        else if (input == "c")
+        {
+            addKnownCard(names, cards);
         }
         else
         {
@@ -324,4 +327,44 @@ void game::showAccusations(vector<pair<vector<vector<string>>, pair<bool, string
 
         ++count;
     }
+}
+
+void game::addKnownCard(vector<string> names, vector<vector<string>>& cards)
+{
+    string knownCard, person;
+    while (true)
+    {
+        cout << "Which card is known?" << endl;
+        getline(cin, knownCard);
+
+        // validate
+        auto it = find(allCards.begin(), allCards.end(), knownCard);
+        if (it == allCards.end())
+        {
+            cout << "Invalid card. Try again.\n";
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    while (true)
+    {
+        cout << "Who had the card?" << endl;
+        getline(cin, person);
+
+        // validate
+        auto it = find(names.begin(), names.end(), person);
+        if (it == names.end())
+        {
+            cout << "Invalid card. Try again.\n";
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    cards.push_back({ person, knownCard });
 }
