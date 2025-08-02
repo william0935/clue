@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -145,6 +146,7 @@ void game::playGame(vector<string>& names, vector<vector<string>>& cards,
 
 void game::displayKnown(vector<vector<string>>& cards)
 {
+    sort(cards.begin(), cards.end());
     for (auto nameCardPair : cards)
     {
         cout << nameCardPair[0] << " has " << nameCardPair[1] << endl;

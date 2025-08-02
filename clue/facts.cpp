@@ -83,6 +83,7 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
                             if (it->first == fact[0] && it->second == fact[1])
                             {
                                 isInConfirmed = true;
+                                break;
                             }
                         }
 
@@ -95,7 +96,6 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
                         {
                             ++it;
                         }
-                        
                     }
 
                     if (clause.size() != before)
@@ -140,10 +140,18 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
             {
                 // Only remove pairs for the same card BUT a different person
                 int before = clause.size();
-                clause.erase(remove_if(clause.begin(), clause.end(),
-                    [&](const pair<string, string>& somePair) {
-                        return somePair.second == C && somePair.first != P;
-                    }), clause.end());
+                for (auto it = clause.begin(); it != clause.end(); )
+                {
+                    if (it->second == C && it->first != P)
+                    {
+                        it = clause.erase(it);
+                    }
+                    else
+                    {
+                        ++it;
+                    }
+                }
+
                 if (clause.size() != before)
                 {
                     changed = true;
@@ -151,5 +159,4 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
             }
         }
     }
-	return;
 }

@@ -104,6 +104,11 @@ void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>&
                         tempPlace.push_back({ player, place });
                     }
                 }
+
+                // account for envelope having the cards as well
+                tempPerson.push_back({ "envelope", person });
+                tempWeapon.push_back({ "envelope", weapon });
+                tempPlace.push_back({ "envelope", place });
             }
 
             f.addFact(tempPerson);
