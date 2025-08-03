@@ -16,12 +16,12 @@ public:
 
 	// pre: none
 	// post: adds a fact(from accusations or elsewhere) to use in deductions
-	void addFact(vector<pair<string, string>> possibilities);
+	void addFact(const vector<pair<string, string>>& possibilities);
 
 	// pre: none
 	// post: bulk of the logic here to eliminate stuff from facts and add stuff back
 	// to cards. this where the magic happens!
-	void eliminate(vector<vector<string>>& cards, vector<string> names);
+	void eliminate(vector<vector<string>>& cards, const vector<string>& names);
 
 private:
 	vector<vector<pair<string, string>>> myFacts;

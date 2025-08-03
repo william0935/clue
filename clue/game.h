@@ -18,7 +18,7 @@ public:
 
 	// pre: none
 	// post: runs the game
-	void playGame(vector<string>& names, vector<vector<string>>& cards, 
+	void playGame(const vector<string>& names, vector<vector<string>>& cards, 
 		vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations);
 
 	// INSIDE THE GAME
@@ -35,15 +35,15 @@ public:
 
 	// pre: none
 	// post: looks at all accusations stored and deduces clues(if any)
-	void deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
-		vector<string> names, vector<vector<string>>& cards);
+	void deduce(const vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
+		const vector<string>& names, vector<vector<string>>& cards);
 
 	// pre: none
 	// post: displays all current accusations
-	void showAccusations(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations);
+	void showAccusations(const vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations);
 
 	// pre: none
 	// post: adds known card to knownCards
-	void addKnownCard(vector<string> names, vector<vector<string>>& cards);
+	void addKnownCard(const vector<string>& names, vector<vector<string>>& cards);
 };
 

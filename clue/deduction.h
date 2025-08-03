@@ -14,8 +14,8 @@ public:
 
 	// pre: none
 	// post: looks at all accusations stored and deduces clues(if any)
-	void deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
-		vector<string> names, vector<vector<string>>& cards);
+	void deduce(const vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
+		const vector<string>& names, vector<vector<string>>& cards);
 
 private:
 	// contains all the information about who has what

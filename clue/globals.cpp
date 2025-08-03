@@ -2,7 +2,7 @@
 
 vector<string> allCards = {
 	// Suspects
-	"mr green", "col mustard", "mrs peacock", "prof plum", "miss scarlett", "dr orchid",
+	"green", "mustard", "peacock", "plum", "scarlett", "orchid",
 	// Weapons
 	"candlestick", "dagger", "lead pipe", "revolver", "rope", "wrench",
 	// Rooms

@@ -10,8 +10,8 @@ deduction::deduction(vector<string> names)
 {
 }
 
-void deduction::deduce(vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
-    vector<string> names, vector<vector<string>>& cards)
+void deduction::deduce(const vector<pair<vector<vector<string>>, pair<bool, string>>>& accusations,
+    const vector<string>& names, vector<vector<string>>& cards)
 {
     // have to add facts about cards you already know/have
     for (auto card : cards)

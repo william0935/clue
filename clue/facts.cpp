@@ -22,14 +22,15 @@ facts::facts(vector<string> turnOrder)
 	}
 }
 
-void facts::addFact(vector<pair<string, string>> possibilities)
+void facts::addFact(const vector<pair<string, string>>& possibilities)
 {
 	myFacts.push_back(possibilities);	
 }
 
-void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
+void facts::eliminate(vector<vector<string>>& cards, const vector<string>& names)
 {
 	// look through myFacts and check for redundancy against all others
+    vector<vector<string>> initialCopy = cards;
     vector<vector<string>> confirmed = cards;
     bool changed = true;
 
@@ -158,5 +159,31 @@ void facts::eliminate(vector<vector<string>>& cards, vector<string> names)
                 }
             }
         }
+    }
+
+    // print out everything discovered
+    bool anythingDeduced = false;
+    for (auto card : cards)
+    {
+        bool inInitial = false;
+        for (auto initialCard : initialCopy)
+        {
+            if (initialCard == card)
+            {
+                inInitial = true;
+                break;
+            }
+        }
+
+        if (!inInitial)
+        {
+            anythingDeduced = true;
+            cout << "Discovered " << card[0] << " has " << card[1] << endl;
+        }
+    }
+
+    if (!anythingDeduced)
+    {
+        cout << "Nothing was discovered..." << endl;
     }
 }
