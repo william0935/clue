@@ -128,7 +128,7 @@ void game::playGame(const vector<string>& names, vector<vector<string>>& cards,
     while (true)
     {
         string input = "";
-        cout << "Look at known cards(k), enter accusations(a), deduce something(d), view accusations(v), add known card(c), or game ended(anything else). Note that you need to use (d) if you want to deduce anything!" << endl;
+        cout << "Look at known cards(k), enter accusations(a), deduce something(d), view accusations(v), add known card(c), or game ended(q). Note that you need to use (d) if you want to deduce anything!" << endl;
         cout << endl;
         getline(cin, input);
 
@@ -157,7 +157,7 @@ void game::playGame(const vector<string>& names, vector<vector<string>>& cards,
             addKnownCard(names, cards);
             cout << endl;
         }
-        else
+        else if (input == "q")
         {
             break;
         }
@@ -374,6 +374,11 @@ void game::addKnownCard(const vector<string>& names, vector<vector<string>>& car
         getline(cin, person);
 
         // validate
+        if (person == "envelope")
+        {
+            break;
+        }
+
         auto it = find(names.begin(), names.end(), person);
         if (it == names.end())
         {
