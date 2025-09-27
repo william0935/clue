@@ -41,6 +41,15 @@ app.get('/api/game/:gameId', (req, res) => {
     res.json({ gameState: game.getGameState() });
 });
 
+app.get('/api/game/:gameId/suggestions', (req, res) => {
+    const game = games.get(req.params.gameId);
+    if (!game) {
+        return res.status(404).json({ error: 'Game not found' });
+    }
+    
+    res.json({ suggestions: game.getSuggestions() });
+});
+
 // WebSocket connection handling
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);

@@ -109,6 +109,9 @@
           <button id="viewAccusationsBtn" class="btn btn-info">
             View All Accusations
           </button>
+          <button id="viewSuggestionsBtn" class="btn btn-primary">
+            View Suggestions
+          </button>
         </div>
 
         <!-- Known Cards Display -->
@@ -244,9 +247,9 @@
         </div>
       </section>
 
-      <!-- Game Suggestions -->
-      <section id="gameSuggestions" class="section" style="display: none">
-        <h2>Current Analysis</h2>
+      <!-- Game Suggestions Display -->
+      <div id="suggestionsDisplay" class="info-panel" style="display: none">
+        <h3>Current Analysis - Possible Solution Cards</h3>
         <div id="suggestionsContent">
           <div class="suggestion-category">
             <h4>Possible Suspects</h4>
@@ -263,7 +266,8 @@
             <div id="possibleRooms"></div>
           </div>
         </div>
-      </section>
+        <button class="close-panel">Close</button>
+      </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
