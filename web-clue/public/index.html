@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clue Web Bot - Deduction Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Clue Web Bot</h1>
+        <p>Your intelligent deduction assistant for Clue board games</p>
+      </header>
+
+      <div class="connection-status" id="connectionStatus">
+        <span class="status-indicator" id="statusIndicator"></span>
+        <span id="statusText">Connecting...</span>
+      </div>
+
+      <!-- Game Creation/Join Section -->
+      <section id="gameSetup" class="section">
+        <h2>Start New Game</h2>
+        <div class="form-group">
+          <button id="createGameBtn" class="btn btn-primary">
+            Create New Game
+          </button>
+          <div class="game-id-display" id="gameIdDisplay" style="display: none">
+            <p>Game ID: <strong id="gameIdText"></strong></p>
+            <button id="copyGameIdBtn" class="btn btn-secondary">
+              Copy ID
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="joinGameId">Join Existing Game:</label>
+          <input type="text" id="joinGameId" placeholder="Enter Game ID" />
+          <button id="joinGameBtn" class="btn btn-secondary">Join Game</button>
+        </div>
+      </section>
+
+      <!-- Game Configuration Section -->
+      <section id="gameConfig" class="section" style="display: none">
+        <h2>Game Setup</h2>
+        <form id="gameConfigForm">
+          <div class="form-group">
+            <label for="numberOfPlayers">Number of Players:</label>
+            <select id="numberOfPlayers" required>
+              <option value="">Select...</option>
+              <option value="2">2 Players</option>
+              <option value="3">3 Players</option>
+              <option value="4">4 Players</option>
+              <option value="5">5 Players</option>
+              <option value="6">6 Players</option>
+            </select>
+          </div>
+
+          <div id="playerNamesSection" style="display: none">
+            <h3>Player Names (in turn order)</h3>
+            <div id="playerNamesInputs"></div>
+          </div>
+
+          <div id="playerCardsSection" style="display: none">
+            <h3>Your Cards</h3>
+            <p>Enter the cards you have at the start of the game:</p>
+            <div id="playerCardsInputs"></div>
+          </div>
+
+          <div id="publicCardsSection" style="display: none">
+            <h3>Cards Known to Everyone (Optional)</h3>
+            <p>Any cards that were shown to all players:</p>
+            <div class="form-group">
+              <select id="publicCardSelect">
+                <option value="">Select a card to add...</option>
+              </select>
+              <button
+                type="button"
+                id="addPublicCardBtn"
+                class="btn btn-secondary"
+              >
+                Add Card
+              </button>
+            </div>
+            <div id="publicCardsList"></div>
+          </div>
+
+          <button type="submit" id="startGameBtn" class="btn btn-primary">
+            Start Game
+          </button>
+        </form>
+      </section>
+
+      <!-- Game Interface Section -->
+      <section id="gameInterface" class="section" style="display: none">
+        <h2>Game in Progress</h2>
+
+        <div class="game-actions">
+          <button id="showKnownBtn" class="btn btn-info">
+            View Known Cards
+          </button>
+          <button id="addAccusationBtn" class="btn btn-warning">
+            Add Accusation
+          </button>
+          <button id="deduceBtn" class="btn btn-success">Run Deduction</button>
+          <button id="addKnownCardBtn" class="btn btn-secondary">
+            Add Known Card
+          </button>
+          <button id="viewAccusationsBtn" class="btn btn-info">
+            View All Accusations
+          </button>
+        </div>
+
+        <!-- Known Cards Display -->
+        <div id="knownCardsDisplay" class="info-panel" style="display: none">
+          <h3>Known Cards</h3>
+          <div id="knownCardsList"></div>
+          <button class="close-panel">Close</button>
+        </div>
+
+        <!-- Accusation Form -->
+        <div id="accusationForm" class="modal" style="display: none">
+          <div class="modal-content">
+            <h3>Add Accusation</h3>
+            <form id="accusationFormData">
+              <div class="form-group">
+                <label for="accuser">Who made the accusation?</label>
+                <select id="accuser" name="accuser" required></select>
+              </div>
+
+              <div class="form-group">
+                <label for="suspectAccused">Suspect:</label>
+                <select id="suspectAccused" name="suspectAccused" required>
+                  <option value="">Select suspect...</option>
+                  <option value="green">Mr. Green</option>
+                  <option value="mustard">Colonel Mustard</option>
+                  <option value="peacock">Mrs. Peacock</option>
+                  <option value="plum">Professor Plum</option>
+                  <option value="scarlett">Miss Scarlett</option>
+                  <option value="orchid">Dr. Orchid</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="weaponAccused">Weapon:</label>
+                <select id="weaponAccused" name="weaponAccused" required>
+                  <option value="">Select weapon...</option>
+                  <option value="candlestick">Candlestick</option>
+                  <option value="dagger">Dagger</option>
+                  <option value="lead pipe">Lead Pipe</option>
+                  <option value="revolver">Revolver</option>
+                  <option value="rope">Rope</option>
+                  <option value="wrench">Wrench</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="roomAccused">Room:</label>
+                <select id="roomAccused" name="roomAccused" required>
+                  <option value="">Select room...</option>
+                  <option value="kitchen">Kitchen</option>
+                  <option value="ballroom">Ballroom</option>
+                  <option value="conservatory">Conservatory</option>
+                  <option value="dining room">Dining Room</option>
+                  <option value="billiard room">Billiard Room</option>
+                  <option value="library">Library</option>
+                  <option value="lounge">Lounge</option>
+                  <option value="hall">Hall</option>
+                  <option value="study">Study</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" id="cardWasShown" /> A card was shown
+                </label>
+              </div>
+
+              <div id="cardShownSection" style="display: none">
+                <div class="form-group">
+                  <label for="playersInOrder">Players asked (in order):</label>
+                  <div id="playersInOrderInputs"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="shownCard"
+                    >Which card was shown? (if you know):</label
+                  >
+                  <select id="shownCard" name="shownCard">
+                    <option value="">I don't know which card</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">
+                  Add Accusation
+                </button>
+                <button type="button" class="btn btn-secondary close-modal">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Add Known Card Form -->
+        <div id="knownCardForm" class="modal" style="display: none">
+          <div class="modal-content">
+            <h3>Add Known Card</h3>
+            <form id="knownCardFormData">
+              <div class="form-group">
+                <label for="cardPlayer">Player:</label>
+                <select id="cardPlayer" name="cardPlayer" required></select>
+              </div>
+
+              <div class="form-group">
+                <label for="cardName">Card:</label>
+                <select id="cardName" name="cardName" required></select>
+              </div>
+
+              <div class="modal-actions">
+                <button type="submit" class="btn btn-primary">Add Card</button>
+                <button type="button" class="btn btn-secondary close-modal">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Accusations History -->
+        <div id="accusationsDisplay" class="info-panel" style="display: none">
+          <h3>All Accusations</h3>
+          <div id="accusationsList"></div>
+          <button class="close-panel">Close</button>
+        </div>
+
+        <!-- Deduction Results -->
+        <div id="deductionResults" class="info-panel" style="display: none">
+          <h3>Deduction Results</h3>
+          <div id="deductionsList"></div>
+          <button class="close-panel">Close</button>
+        </div>
+      </section>
+
+      <!-- Game Suggestions -->
+      <section id="gameSuggestions" class="section" style="display: none">
+        <h2>Current Analysis</h2>
+        <div id="suggestionsContent">
+          <div class="suggestion-category">
+            <h4>Possible Suspects</h4>
+            <div id="possibleSuspects"></div>
+          </div>
+
+          <div class="suggestion-category">
+            <h4>Possible Weapons</h4>
+            <div id="possibleWeapons"></div>
+          </div>
+
+          <div class="suggestion-category">
+            <h4>Possible Rooms</h4>
+            <div id="possibleRooms"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
