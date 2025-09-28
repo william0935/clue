@@ -166,8 +166,6 @@ class ClueWebBot {
             this.gameId = data.gameId;
             this.socket.emit('joinGame', this.gameId);
             
-            document.getElementById('gameIdText').textContent = this.gameId;
-            document.getElementById('gameIdDisplay').style.display = 'block';
             document.getElementById('gameConfig').style.display = 'block';
             
             this.showNotification('Game created successfully!');
@@ -510,11 +508,6 @@ class ClueWebBot {
         document.getElementById('gameInterface').style.display = 'block';
         document.getElementById('gameSuggestions').style.display = 'block';
         
-        // Display the game ID
-        if (this.gameState && this.gameState.gameId) {
-            document.getElementById('gameIdDisplay').textContent = this.gameState.gameId;
-        }
-        
         console.log('About to call populatePlayerSelects with playerNames:', this.playerNames);
         this.populatePlayerSelects();
         this.updateGameSuggestions();
@@ -632,7 +625,7 @@ class ClueWebBot {
                 const completeDiv = document.createElement('div');
                 completeDiv.className = 'solution-complete';
                 completeDiv.innerHTML = `
-                    <h3 style="color: #22c55e; margin-top: 20px;">🎉 Murder Solution Complete!</h3>
+                    <h3 style="color: #22c55e; margin-top: 20px;">Murder Solution Complete!</h3>
                     <p>You have successfully deduced the entire solution!</p>
                 `;
                 list.appendChild(completeDiv);
