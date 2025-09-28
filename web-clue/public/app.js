@@ -78,11 +78,13 @@ class ClueWebBot {
         
         // Game interface events
         document.getElementById('showKnownBtn').addEventListener('click', () => this.showKnownCards());
+        document.getElementById('showEnvelopeBtn').addEventListener('click', () => this.showEnvelopeCards());
         document.getElementById('addAccusationBtn').addEventListener('click', () => this.showAccusationForm());
         document.getElementById('deduceBtn').addEventListener('click', () => this.performDeduction());
         document.getElementById('addKnownCardBtn').addEventListener('click', () => this.showKnownCardForm());
         document.getElementById('viewAccusationsBtn').addEventListener('click', () => this.showAccusations());
         document.getElementById('viewSuggestionsBtn').addEventListener('click', () => this.showSuggestions());
+        document.getElementById('copyGameIdBtn').addEventListener('click', () => this.copyGameId());
         
         // Form events
         document.getElementById('accusationFormData').addEventListener('submit', (e) => this.submitAccusation(e));
@@ -503,9 +505,15 @@ class ClueWebBot {
     
     showGameInterface() {
         console.log('showGameInterface called');
+        document.getElementById('gameSetup').style.display = 'none';
         document.getElementById('gameConfig').style.display = 'none';
         document.getElementById('gameInterface').style.display = 'block';
         document.getElementById('gameSuggestions').style.display = 'block';
+        
+        // Display the game ID
+        if (this.gameState && this.gameState.gameId) {
+            document.getElementById('gameIdDisplay').textContent = this.gameState.gameId;
+        }
         
         console.log('About to call populatePlayerSelects with playerNames:', this.playerNames);
         this.populatePlayerSelects();
@@ -572,6 +580,87 @@ class ClueWebBot {
         display.style.display = 'block';
     }
     
+    showEnvelopeCards() {
+        const display = document.getElementById('envelopeCardsDisplay');
+        const list = document.getElementById('envelopeCardsList');
+        
+        list.innerHTML = '';
+        
+        if (this.gameState && this.gameState.envelopeCards && this.gameState.envelopeCards.length > 0) {
+            // Group cards by type
+            const suspects = this.gameState.envelopeCards.filter(card => 
+                ['green', 'mustard', 'peacock', 'plum', 'scarlett', 'orchid'].includes(card)
+            );
+            const weapons = this.gameState.envelopeCards.filter(card => 
+                ['candlestick', 'dagger', 'lead pipe', 'revolver', 'rope', 'wrench'].includes(card)
+            );
+            const rooms = this.gameState.envelopeCards.filter(card => 
+                ['kitchen', 'ballroom', 'conservatory', 'dining room', 'billiard room', 'library', 'lounge', 'hall', 'study'].includes(card)
+            );
+            
+            // Display organized by type
+            if (suspects.length > 0) {
+                const suspectDiv = document.createElement('div');
+                suspectDiv.className = 'envelope-category';
+                suspectDiv.innerHTML = `
+                    <h4>Suspect: <span class="envelope-card">${this.capitalizeCard(suspects[0])}</span></h4>
+                `;
+                list.appendChild(suspectDiv);
+            }
+            
+            if (weapons.length > 0) {
+                const weaponDiv = document.createElement('div');
+                weaponDiv.className = 'envelope-category';
+                weaponDiv.innerHTML = `
+                    <h4>Weapon: <span class="envelope-card">${this.capitalizeCard(weapons[0])}</span></h4>
+                `;
+                list.appendChild(weaponDiv);
+            }
+            
+            if (rooms.length > 0) {
+                const roomDiv = document.createElement('div');
+                roomDiv.className = 'envelope-category';
+                roomDiv.innerHTML = `
+                    <h4>Room: <span class="envelope-card">${this.capitalizeCard(rooms[0])}</span></h4>
+                `;
+                list.appendChild(roomDiv);
+            }
+            
+            // Show completion status
+            const totalFound = suspects.length + weapons.length + rooms.length;
+            if (totalFound === 3) {
+                const completeDiv = document.createElement('div');
+                completeDiv.className = 'solution-complete';
+                completeDiv.innerHTML = `
+                    <h3 style="color: #22c55e; margin-top: 20px;">🎉 Murder Solution Complete!</h3>
+                    <p>You have successfully deduced the entire solution!</p>
+                `;
+                list.appendChild(completeDiv);
+            } else {
+                const progressDiv = document.createElement('div');
+                progressDiv.className = 'solution-progress';
+                progressDiv.innerHTML = `
+                    <p style="margin-top: 15px; color: #6b7280;">
+                        Progress: ${totalFound}/3 cards deduced
+                        ${totalFound < 3 ? ' - Keep adding accusations and known cards to deduce more!' : ''}
+                    </p>
+                `;
+                list.appendChild(progressDiv);
+            }
+        } else {
+            list.innerHTML = `
+                <div class="no-envelope-cards">
+                    <p>No cards have been deduced to be in the envelope yet.</p>
+                    <p style="margin-top: 10px; color: #6b7280; font-size: 0.9em;">
+                        Add accusations and known cards, then run deduction to discover the murder solution!
+                    </p>
+                </div>
+            `;
+        }
+        
+        display.style.display = 'block';
+    }
+    
     showAccusationForm() {
         const modal = document.getElementById('accusationForm');
         
@@ -594,7 +683,7 @@ class ClueWebBot {
             
             const div = document.createElement('div');
             div.innerHTML = `
-                <label>
+                <label class="checkbox-label">
                     <input type="checkbox" name="playerInOrder" value="${name}">
                     ${name}
                 </label>
@@ -631,6 +720,15 @@ class ClueWebBot {
             accusationData.playersInvolved.push(checkbox.value);
         });
         
+        // If no card was shown and no specific players were checked, 
+        // assume all other players were asked in order
+        if (!accusationData.cardShown && accusationData.playersInvolved.length === 0) {
+            // Add all players except the accuser
+            const accuser = accusationData.accuser;
+            accusationData.playersInvolved = this.playerNames.filter(name => name !== accuser);
+        }
+        
+        console.log('Submitting accusation:', accusationData);
         this.socket.emit('addAccusation', accusationData);
         this.closeModal(document.getElementById('accusationForm'));
     }
@@ -669,7 +767,11 @@ class ClueWebBot {
     }
     
     performDeduction() {
+        console.log('=== CLIENT: performDeduction called ===');
+        console.log('gameState:', this.gameState);
+        console.log('socket connected:', this.socket.connected);
         this.socket.emit('requestDeduction');
+        console.log('=== CLIENT: requestDeduction emitted ===');
     }
     
     showDeductionResults(deductions) {

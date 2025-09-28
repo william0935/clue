@@ -6,6 +6,11 @@ class Deduction {
     }
     
     deduce(accusations, playerNames, cards) {
+        console.log('=== DEDUCTION DEBUG ===');
+        console.log('accusations:', JSON.stringify(accusations, null, 2));
+        console.log('playerNames:', playerNames);
+        console.log('cards:', cards);
+        
         // Initialize facts with player names
         this.facts = new Facts(playerNames);
         
@@ -17,11 +22,14 @@ class Deduction {
         
         // Process each accusation to add constraints
         for (const accusation of accusations) {
+            console.log('Processing accusation:', accusation);
             this.processAccusation(accusation, playerNames);
         }
         
         // Perform elimination and return new deductions
         const newDeductions = this.facts.eliminate(cards, playerNames);
+        console.log('newDeductions:', newDeductions);
+        console.log('=== END DEDUCTION DEBUG ===');
         return newDeductions;
     }
     

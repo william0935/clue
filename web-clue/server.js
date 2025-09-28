@@ -103,19 +103,25 @@ io.on('connection', (socket) => {
     
     // Handle deduction requests
     socket.on('requestDeduction', () => {
+        console.log('=== SERVER: requestDeduction received ===');
         const game = games.get(socket.gameId);
         if (!game) {
+            console.log('ERROR: Game not found for gameId:', socket.gameId);
             socket.emit('error', 'Game not found');
             return;
         }
         
+        console.log('Game found, calling performDeduction...');
         try {
             const deductions = game.performDeduction();
+            console.log('Deductions result:', deductions);
             io.to(socket.gameId).emit('deductionResult', {
                 deductions,
                 gameState: game.getGameState()
             });
+            console.log('=== SERVER: deductionResult emitted ===');
         } catch (error) {
+            console.log('ERROR in deduction:', error.message);
             socket.emit('error', error.message);
         }
     });

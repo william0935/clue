@@ -95,9 +95,20 @@
       <section id="gameInterface" class="section" style="display: none">
         <h2>Game in Progress</h2>
 
+        <div id="gameInfo" class="game-info">
+          <span class="game-id-label">Game ID:</span>
+          <span id="gameIdDisplay" class="game-id"></span>
+          <button id="copyGameIdBtn" class="btn-copy" title="Copy Game ID">
+            📋
+          </button>
+        </div>
+
         <div class="game-actions">
           <button id="showKnownBtn" class="btn btn-info">
             View Known Cards
+          </button>
+          <button id="showEnvelopeBtn" class="btn btn-success">
+            View Solution
           </button>
           <button id="addAccusationBtn" class="btn btn-warning">
             Add Accusation
@@ -118,6 +129,15 @@
         <div id="knownCardsDisplay" class="info-panel" style="display: none">
           <h3>Known Cards</h3>
           <div id="knownCardsList"></div>
+          <button class="close-panel">Close</button>
+        </div>
+
+        <!-- Envelope Cards Display -->
+        <div id="envelopeCardsDisplay" class="info-panel" style="display: none">
+          <h3>Murder Solution (Envelope)</h3>
+          <div id="envelopeCardsList">
+            <p>No cards have been deduced to be in the envelope yet.</p>
+          </div>
           <button class="close-panel">Close</button>
         </div>
 
@@ -174,7 +194,7 @@
               </div>
 
               <div class="form-group">
-                <label>
+                <label class="checkbox-label">
                   <input type="checkbox" id="cardWasShown" /> A card was shown
                 </label>
               </div>

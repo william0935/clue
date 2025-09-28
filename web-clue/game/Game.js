@@ -165,6 +165,13 @@ class Game {
         return this.cards.some(card => card[0] === playerName && card[1] === cardName);
     }
     
+    // Get cards that have been deduced to be in the envelope
+    getEnvelopeCards() {
+        return this.cards
+            .filter(card => card[0] === 'envelope')
+            .map(card => card[1]);
+    }
+    
     // Get current game state for frontend
     getGameState() {
         return {
@@ -173,6 +180,7 @@ class Game {
             playerNames: this.playerNames,
             knownCards: this.getKnownCards(),
             accusations: this.getAccusations(),
+            envelopeCards: this.getEnvelopeCards(),
             turnOrder: this.turnOrder,
             gameReady: this.gameReady
         };
